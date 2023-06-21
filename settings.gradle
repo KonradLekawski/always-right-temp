@@ -1,0 +1,5 @@
+rootProject.name = 'always-right-temp-inc'
+include 'anomaly-detection-service'
+include 'rest-api-service'
+include 'stream-api-service'
+include 'temperature-measurments-generator'
