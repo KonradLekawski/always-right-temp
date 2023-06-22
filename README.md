@@ -39,14 +39,19 @@ From the project root directory, run the following command:
 This will build all the services. Built JAR files can be found in the `build/libs` directory of each service.
 
 ### Running the Services
+In order to run this project fallow these steps.
 
-Each service can be started as a standalone Spring Boot application:
+
+#### Step 1: Make sure you have project build.
 ```bash
-java -jar service-name/build/libs/service-name.jar
+./gradlew clean build
 ```
+#### Step 2: Run docker compose to setup kafka and other dependencies.
+```bash
+docker-compose up
+```
+#### Step 3: Run the measurement generator.
 
-Replace `service-name` with the actual service directory and JAR file name.
-
-## Deployment
-
-The repository includes Helm charts for deploying the services to a Kubernetes cluster. Detailed deployment instructions will be provided later.
+```bash
+java -jar temperature-measurment-generator/build/libs/temperature-measurment-generator-0.0.1-SNAPSHOT.jar
+````
