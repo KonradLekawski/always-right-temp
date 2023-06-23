@@ -1,10 +1,9 @@
 package com.alwaysrighttempinc.temperaturemeasurmentgenerator.service;
 
-import com.alwaysrighttempinc.temperaturemeasurmentgenerator.model.TemperatureMeasurement;
+import com.alwaysrighttempinc.model.TemperatureMeasurement;
 import org.springframework.kafka.core.KafkaTemplate;
 
 public class TemperatureMeasurementPublisher {
-
     private final String topic;
     private final KafkaTemplate<String, TemperatureMeasurement> kafkaTemplate;
 

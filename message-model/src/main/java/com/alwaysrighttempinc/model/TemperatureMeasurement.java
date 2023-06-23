@@ -1,4 +1,4 @@
-package com.alwaysrighttempinc.temperaturemeasurmentgenerator.model;
+package com.alwaysrighttempinc.model;
 
 public record TemperatureMeasurement(String measurementId,
                                      String thermometerId,

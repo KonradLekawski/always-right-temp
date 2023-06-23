@@ -1,7 +1,7 @@
 package com.alwaysrighttempinc.temperaturemeasurmentgenerator.integration;
 
 
-import com.alwaysrighttempinc.temperaturemeasurmentgenerator.model.TemperatureMeasurement;
+import com.alwaysrighttempinc.model.TemperatureMeasurement;
 import com.alwaysrighttempinc.temperaturemeasurmentgenerator.service.TemperatureMeasurementPublisher;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -3,3 +3,6 @@ include 'anomaly-detection-service'
 include 'rest-api-service'
 include 'stream-api-service'
 include 'temperature-measurment-generator'
+include 'message-model'
+include 'message-model'
+

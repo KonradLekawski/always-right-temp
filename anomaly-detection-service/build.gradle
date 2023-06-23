@@ -17,7 +17,19 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-json', version: '3.1.0'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-mongodb', version: '3.1.1'
+	implementation group: 'org.springframework.kafka', name: 'spring-kafka', version: '3.0.7'
+	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.15.2'
+	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.15.2'
+	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.15.2'
+	implementation project(':message-model')
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.6.1'
+	testImplementation group: 'org.springframework.kafka', name: 'spring-kafka-test', version: '3.0.8'
+	testImplementation group: 'org.testcontainers', name: 'testcontainers', version: '1.18.3'
+	testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.18.3'
+	testImplementation group: 'org.testcontainers', name: 'kafka', version: '1.18.3'
 }
 
 tasks.named('test') {

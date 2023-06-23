@@ -26,8 +26,7 @@ Each service is a standalone Spring Boot application and can be built and run in
 
 - Java 17
 - Docker
-- Kubernetes (optional, for deployment)
-- Helm (optional, for deployment)
+- Docker-compose
 
 ### Building the Project
 
@@ -54,4 +53,9 @@ docker-compose up
 
 ```bash
 java -jar temperature-measurment-generator/build/libs/temperature-measurment-generator-0.0.1-SNAPSHOT.jar
+````
+#### Step 4: Run the anomaly detector.
+
+```bash
+java -jar anomaly-detection-service/build/libs/anomaly-detection-service-0.0.1-SNAPSHOT.jar
 ````
