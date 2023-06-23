@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class Config {
-    @Value("${detection.anomaly.treshold:5}")
+    @Value("${detection.anomaly.threshold:5}")
     private int anomalyThreshold;
 
     private final AnomalyRepository anomalyRepository;

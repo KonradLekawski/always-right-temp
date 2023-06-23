@@ -45,7 +45,7 @@ public class AnomalyDetectionServiceONE implements AnomalyDetectionService<Tempe
         if (measurementCopies.size() != MAX_CONSECUTIVE_MEASUREMENTS) {
             return;
         }
-        TemperatureMeasurement anomalyMeasurement = identifyAnomaly(measurementCopies);
+        Anomaly anomalyMeasurement = identifyAnomaly(measurementCopies);
         if (anomalyMeasurement != null) {
             saveAnomalyToDatabase(anomalyMeasurement);
         }
@@ -65,7 +65,7 @@ public class AnomalyDetectionServiceONE implements AnomalyDetectionService<Tempe
         }
     }
 
-    private TemperatureMeasurement identifyAnomaly(Collection<TemperatureMeasurement> measurementCopies) {
+    private Anomaly identifyAnomaly(Collection<TemperatureMeasurement> measurementCopies) {
         double temperatureSum = 0.0;
         TemperatureMeasurement maxMeasurement = null;
         for (TemperatureMeasurement measurement : measurementCopies) {
@@ -77,12 +77,14 @@ public class AnomalyDetectionServiceONE implements AnomalyDetectionService<Tempe
         }
         double averageTemperature = temperatureSum / MAX_CONSECUTIVE_MEASUREMENTS;
         if (isAnomaly(maxMeasurement, averageTemperature)) {
-            LOGGER.debug("Temperature {} is at least {} greater than average of {}", maxMeasurement.temperature(),
-                    anomalyThreshold, averageTemperature);
+            double temperatureDifference = maxMeasurement.temperature() - averageTemperature;
+            LOGGER.debug("Temperature {} is {} greater than average of {}", maxMeasurement.temperature(),
+                    temperatureDifference, averageTemperature);
             LOGGER.warn("Detected an anomaly: {}, total anomalies detected {}", maxMeasurement,
                     anomalyCount.incrementAndGet());
             temperatureMeasurements.removeFirstOccurrence(maxMeasurement);
-            return maxMeasurement;
+            return new Anomaly(UUID.randomUUID().toString(), maxMeasurement.measurementId(), maxMeasurement.thermometerId(),
+                    maxMeasurement.roomId(), maxMeasurement.timestamp(), maxMeasurement.temperature(), temperatureDifference);
         }
         return null;
     }
@@ -91,13 +93,7 @@ public class AnomalyDetectionServiceONE implements AnomalyDetectionService<Tempe
         return maxMeasurement != null && maxMeasurement.temperature() > averageTemperature + anomalyThreshold;
     }
 
-    private void saveAnomalyToDatabase(TemperatureMeasurement maxMeasurement) {
-        anomalyRepository.save(new Anomaly(
-                UUID.randomUUID().toString(),
-                maxMeasurement.measurementId(),
-                maxMeasurement.thermometerId(),
-                maxMeasurement.roomId(),
-                maxMeasurement.timestamp(),
-                maxMeasurement.temperature()));
+    private void saveAnomalyToDatabase(Anomaly anomaly) {
+        anomalyRepository.save(anomaly);
     }
 }

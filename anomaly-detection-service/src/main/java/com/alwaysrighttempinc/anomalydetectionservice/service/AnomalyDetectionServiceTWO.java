@@ -44,11 +44,12 @@ public class AnomalyDetectionServiceTWO implements AnomalyDetectionService<Tempe
         PriorityQueue<TemperatureMeasurement> queueCopy = enqueueMeasurement(newMeasurement);
         double averageTemperature = calculateAverageTemperatureInTimeWindow(queueCopy);
         if (isAnomaly(newMeasurement, averageTemperature)) {
-            saveAnomalyToDatabase(newMeasurement);
-            LOGGER.debug("Temperature {} is at least {} greater than average of {} in 10 second window", newMeasurement.temperature(),
-                    anomalyThreshold, averageTemperature);
+            double temperatureDifference = newMeasurement.temperature() - averageTemperature;
+            LOGGER.debug("Temperature {} is  {} greater than average of {} in 10 second window", newMeasurement.temperature(),
+                    temperatureDifference, averageTemperature);
             LOGGER.warn("Detected an anomaly: {}, total anomalies detected {}", newMeasurement,
                     anomalyCount.incrementAndGet());
+            saveAnomalyToDatabase(newMeasurement, temperatureDifference);
         }
         LOGGER.debug("Transaction processed: {}", totalTransactions.incrementAndGet());
     }
@@ -77,13 +78,14 @@ public class AnomalyDetectionServiceTWO implements AnomalyDetectionService<Tempe
         return newMeasurement.temperature() > averageTemperature + anomalyThreshold;
     }
 
-    private void saveAnomalyToDatabase(TemperatureMeasurement newMeasurement) {
+    private void saveAnomalyToDatabase(TemperatureMeasurement newMeasurement, double temperatureDifference) {
         anomalyRepository.save(new Anomaly(
                 UUID.randomUUID().toString(),
                 newMeasurement.measurementId(),
                 newMeasurement.thermometerId(),
                 newMeasurement.roomId(),
                 newMeasurement.timestamp(),
-                newMeasurement.temperature()));
+                newMeasurement.temperature(),
+                temperatureDifference));
     }
 }

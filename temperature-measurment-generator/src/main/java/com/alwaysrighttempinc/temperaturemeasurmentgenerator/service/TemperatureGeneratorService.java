@@ -12,8 +12,8 @@ import java.util.stream.Stream;
 
 public class TemperatureGeneratorService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TemperatureGeneratorService.class);
-    public static final long AMOUNT_OF_THERMOMETERS = 10000L;
-    public static final long AMOUNT_OF_ROOMS = 10000L;
+    public static final long AMOUNT_OF_THERMOMETERS = 100L;
+    public static final long AMOUNT_OF_ROOMS = 100L;
 
     private final double baseTemperature;
 

@@ -8,5 +8,4 @@ public class AnomalyDetectionServiceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(AnomalyDetectionServiceApplication.class, args);
 	}
-
 }
