@@ -1,19 +1,23 @@
 package com.alwaysrighttempinc.temperaturemeasurmentgenerator.service;
 
-import com.alwaysrighttempinc.temperaturemeasurmentgenerator.model.TemperatureMeasurement;
+import com.alwaysrighttempinc.model.TemperatureMeasurement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Stream;
 
 public class TemperatureGeneratorService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TemperatureGeneratorService.class);
+    public static final long AMOUNT_OF_THERMOMETERS = 10000L;
+    public static final long AMOUNT_OF_ROOMS = 10000L;
 
     private final double baseTemperature;
 
-    private final double batchSize;
+    private final long batchSize;
 
     private final double temperatureThreshold;
 
@@ -23,8 +27,10 @@ public class TemperatureGeneratorService {
 
     private final TemperatureMeasurementPublisher temperatureMeasurementPublisher;
 
+    private final AtomicLong anomaliesProduced = new AtomicLong(0);
+
     public TemperatureGeneratorService(double baseTemperature,
-                                       double batchSize,
+                                       long batchSize,
                                        double temperatureThreshold,
                                        double anomalyLikelihood,
                                        Random random,
@@ -39,10 +45,10 @@ public class TemperatureGeneratorService {
 
     @Scheduled(fixedRateString = "${temperature.generator.rate}")
     public void generateAndSendTemperatureData() {
-        for (int i = 0; i < batchSize; i++) {
-            TemperatureMeasurement measurement = generateTemperatureMeasurement();
-            temperatureMeasurementPublisher.publish(measurement);
-        }
+        Stream.generate(this::generateTemperatureMeasurement)
+                .parallel()
+                .limit(batchSize)
+                .forEach(temperatureMeasurementPublisher::publish);
     }
 
     private TemperatureMeasurement generateTemperatureMeasurement() {
@@ -53,14 +59,22 @@ public class TemperatureGeneratorService {
         }
         final TemperatureMeasurement measurement = new TemperatureMeasurement(
                 UUID.randomUUID().toString(),
-                UUID.randomUUID().toString(),
-                UUID.randomUUID().toString(),
+                generateThermometerId(),
+                generateRoomId(),
                 System.currentTimeMillis(),
                 temperature);
         if (isAnomaly) {
-            LOGGER.info("Anomaly generated: {}", measurement);
+            LOGGER.info("Anomaly generated: {} TOTAL anomalies produced {}", measurement, anomaliesProduced.incrementAndGet());
         }
         return measurement;
+    }
+
+    private String generateThermometerId() {
+        return "Thermometer-" + random.nextLong(AMOUNT_OF_THERMOMETERS);
+    }
+
+    private String generateRoomId() {
+        return "Room-" + random.nextLong(AMOUNT_OF_ROOMS);
     }
 
     private int generateAdditionalTemperatureFactor() {

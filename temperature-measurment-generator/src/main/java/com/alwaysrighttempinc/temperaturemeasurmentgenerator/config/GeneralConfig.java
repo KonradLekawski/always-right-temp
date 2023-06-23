@@ -1,22 +1,16 @@
 package com.alwaysrighttempinc.temperaturemeasurmentgenerator.config;
 
 
-import com.alwaysrighttempinc.temperaturemeasurmentgenerator.model.TemperatureMeasurement;
+import com.alwaysrighttempinc.model.TemperatureMeasurement;
 import com.alwaysrighttempinc.temperaturemeasurmentgenerator.service.TemperatureGeneratorService;
 import com.alwaysrighttempinc.temperaturemeasurmentgenerator.service.TemperatureMeasurementPublisher;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.serialization.StringSerializer;
+import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.core.ProducerFactory;
-import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 @Configuration
@@ -26,7 +20,7 @@ public class GeneralConfig {
     private double baseTemperature;
 
     @Value("${temperature.generator.batch-size}")
-    private double batchSize;
+    private long batchSize;
 
     @Value("${anomaly.temperature-threshold}")
     private double temperatureThreshold;
@@ -34,11 +28,23 @@ public class GeneralConfig {
     @Value("${anomaly.likelihood}")
     private double anomalyLikelihood;
 
-    @Value("${kafka.topic}")
+    @Value("${spring.kafka.topic.name}")
     private String topic;
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String kafkaBootstrapServers;
+
+    @Value("${spring.kafka.partition.number:5}")
+    private Integer numberOfPartitions;
+
+    @Value("${spring.kafka.replication.factor:1}")
+    private Short replicationFactor;
+
+    private final KafkaTemplate<String, TemperatureMeasurement> kafkaTemplate;
+
+    public GeneralConfig(KafkaTemplate<String, TemperatureMeasurement> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
+    }
 
     @Bean
     public Random random() {
@@ -47,7 +53,7 @@ public class GeneralConfig {
 
     @Bean
     public TemperatureMeasurementPublisher temperatureMeasurementPublisher() {
-        return new TemperatureMeasurementPublisher(topic, kafkaTemplate());
+        return new TemperatureMeasurementPublisher(topic, kafkaTemplate);
     }
 
     @Bean
@@ -57,16 +63,8 @@ public class GeneralConfig {
     }
 
     @Bean
-    public ProducerFactory<String, TemperatureMeasurement> producerFactory() {
-        Map<String, Object> configProps = new HashMap<>();
-        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaBootstrapServers);
-        configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-        return new DefaultKafkaProducerFactory<>(configProps);
+    public NewTopic createNewTopic() {
+        return new NewTopic(topic, numberOfPartitions, replicationFactor);
     }
 
-    @Bean
-    public KafkaTemplate<String, TemperatureMeasurement> kafkaTemplate() {
-        return new KafkaTemplate<>(producerFactory());
-    }
 }

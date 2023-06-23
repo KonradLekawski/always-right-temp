@@ -1,6 +1,6 @@
 package com.alwaysrighttempinc.temperaturemeasurmentgenerator.service;
 
-import com.alwaysrighttempinc.temperaturemeasurmentgenerator.model.TemperatureMeasurement;
+import com.alwaysrighttempinc.model.TemperatureMeasurement;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,14 +29,14 @@ class TemperatureGeneratorServiceTest {
     public void setUp() {
         openMocks(this);
         double baseTemperature = 20.0;
-        double batchSize = 1;
+        long batchSize = 1L;
         double temperatureThreshold = 5.0;
         double anomalyLikelihood = 0.5;
         service = new TemperatureGeneratorService(baseTemperature, batchSize, temperatureThreshold, anomalyLikelihood, random, temperatureMeasurementPublisher);
     }
 
     @Test
-    void testGenerateAndSendNormalTemperatureData() {
+    void shouldGenerateAndSendMeasurement() {
         double normalTemperatureIncrease = 0.1;
         double nonAnomalyValue = 0.6;
 
@@ -49,7 +49,7 @@ class TemperatureGeneratorServiceTest {
     }
 
     @Test
-    void testGenerateAndSendAnomalyTemperatureData() {
+    void shouldGenerateAndSendAnomaly() {
         //given
         double anomalyTemperatureIncrease = 0.1;
         double anomalyValue = 0.4;

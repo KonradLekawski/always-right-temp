@@ -1,6 +1,6 @@
 package com.alwaysrighttempinc.temperaturemeasurmentgenerator.service;
 
-import com.alwaysrighttempinc.temperaturemeasurmentgenerator.model.TemperatureMeasurement;
+import com.alwaysrighttempinc.model.TemperatureMeasurement;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -35,7 +35,7 @@ class TemperatureMeasurementPublisherTest {
     }
 
     @Test
-    void testPublish() {
+    void shouldPublishMeasurementToKafka() {
         //given
         TemperatureMeasurement measurement = new TemperatureMeasurement( "id","device1",
                 "location1", System.currentTimeMillis(), 20.0);
