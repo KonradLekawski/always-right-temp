@@ -59,3 +59,8 @@ java -jar temperature-measurment-generator/build/libs/temperature-measurment-gen
 ```bash
 java -jar anomaly-detection-service/build/libs/anomaly-detection-service-0.0.1-SNAPSHOT.jar
 ````
+#### Step 5: Run the rest api.
+
+```bash
+java -jar rest-api-service/build/libs/rest-api-service-0.0.1-SNAPSHOT.jar
+````

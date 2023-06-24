@@ -5,5 +5,6 @@ public record Anomaly(String anomalyId,
                       String thermometerId,
                       String roomId,
                       long timestamp,
-                      double temperature) {
+                      double temperature,
+                      double temperatureDifference) {
 }

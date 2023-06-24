@@ -5,7 +5,6 @@ import com.alwaysrighttempinc.model.Anomaly;
 import com.alwaysrighttempinc.model.TemperatureMeasurement;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
@@ -13,7 +12,6 @@ import java.util.Collection;
 import java.util.Collections;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
