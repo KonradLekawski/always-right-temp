@@ -16,8 +16,11 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-webflux', version: '3.1.1'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-mongodb-reactive', version: '3.1.1'
+    implementation project(path: ':message-model')
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation group: 'io.projectreactor', name: 'reactor-test', version: '3.1.0.RELEASE'
 }
 
 tasks.named('test') {

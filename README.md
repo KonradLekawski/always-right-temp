@@ -64,3 +64,14 @@ java -jar anomaly-detection-service/build/libs/anomaly-detection-service-0.0.1-S
 ```bash
 java -jar rest-api-service/build/libs/rest-api-service-0.0.1-SNAPSHOT.jar
 ````
+#### Step 6: Run the stream api.
+
+```bash
+java -jar stream-api-service/build/libs/stream-api-service-0.0.1-SNAPSHOT.jar
+````
+
+#### Step 7: Now you can check the endpoints.
+[REST_API](http://localhost:8080/)
+
+[STREAM_API](http://localhost:8081/anomalies/stream)
+
